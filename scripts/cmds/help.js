@@ -34,7 +34,7 @@ module.exports = {
       const categories = {};
       let msg = "";
 
-      msg += `╔══════════════╗\n🔹 𝑪𝑶𝑴𝑴𝑨𝑵𝑫 𝑳𝑰𝑺𝑻 🔹\n╚══════════════╝\n`;
+      msg += `╔══════════════╗\n🔹 ❒𝙘𝙤𝙢𝙢𝙖𝙣𝙙 𝙡𝙞𝙨𝙩🔹\n╚══════════════╝\n`;
 
       for (const [name, value] of commands) {
         if (value.config.role > 1 && role < value.config.role) continue;
@@ -50,7 +50,7 @@ module.exports = {
 
           const names = categories[category].commands.sort();
           names.forEach((item) => {
-            msg += `\n│𖤍 ${item}`;
+            msg += `\n│ツ ${item}`;
           });
 
           msg += `\n╰────────⭓`;
@@ -60,10 +60,10 @@ module.exports = {
       const totalCommands = commands.size;
       msg += `\n𝗖𝘂𝗿𝗿𝗲𝗻𝘁𝗹𝘆, 𝘁𝗵𝗲 𝗯𝗼𝘁 𝗵𝗮𝘀 ${totalCommands} 𝗰𝗼𝗺𝗺𝗮𝗻𝗱𝘀 𝘁𝗵𝗮𝘁 𝗰𝗮𝗻 𝗯𝗲 𝘂𝘀𝗲𝗱\n`;
       msg += `\n𝗧𝘆𝗽𝗲 ${prefix}𝗵𝗲𝗹𝗽 𝗰𝗺𝗱𝗡𝗮𝗺𝗲 𝘁𝗼 𝘃𝗶𝗲𝘄 𝘁𝗵𝗲 𝗱𝗲𝘁𝗮𝗶𝗹𝘀 𝗼𝗳 𝘁𝗵𝗮𝘁 𝗰𝗼𝗺𝗺𝗮𝗻𝗱\n`;
-      msg += `\n🫧𝑩𝑶𝑻 𝑵𝑨𝑴𝑬🫧:PUBLIC BOT`;
-      msg += `\n𓀬 𝐁𝐎𝐓 𝐎𝐖𝐍𝐄𝐑 𓀬`;
+      msg += `\n⏤͟͟͞͞𝘽𝙤𝙩 𝙣𝙖𝙢𝙚ツ:PUBLIC BOT`;
+      msg += `\n𓀬 𝘽𝙤𝙩 𝙤𝙬𝙣𝙚𝙧👑`;
       msg += `\n 	 					`;
-      msg += `\n~𝙉𝘼𝙈𝙀:♡︎ YOUR RIMON 🥷`;
+      msg += `\n~𝙉𝙖𝙢𝙚: ⏤͟͟͟͟͟͟͟͟͞͞͞͞͞͞͞͞𝙍𝙞𝙢𝙤𝙣 𝙘𝙝𝙖𝙩 𝙗𝙤𝙩`;
       msg += `\n~𝙁𝘽:https://www.facebook.com/it.z.rimon.216225`;
 
       await message.reply({
@@ -88,7 +88,7 @@ module.exports = {
       let msg = `╔══════════════╗\n༒︎ ${categoryName.toUpperCase()} COMMANDS ༒︎\n╚══════════════╝\n`;
 
       filteredCommands.forEach((cmd) => {
-        msg += `\n☠︎︎ ${cmd.config.name} `;
+        msg += `\nツ ${cmd.config.name} `;
       });
 
       await message.reply(msg);
@@ -110,7 +110,7 @@ module.exports = {
         const guideBody = configCommand.guide?.en || "No guide available.";
         const usage = guideBody.replace(/{p}/g, prefix).replace(/{n}/g, configCommand.name);
 
-        const response = `╭── 𝑵𝑨𝑴𝑬 ────⭓\n` +
+        const response = `╭── 𝙉𝙖𝙢𝙚 ────⭓\n` +
           `│ ${configCommand.name}\n` +
           `├── 𝑰𝑵𝑭𝑶\n` +
           `│ 𝐷𝑒𝑠𝑐𝑟𝑖𝑝𝑡𝑖𝑜𝑛: ${longDescription}\n` +
@@ -122,8 +122,8 @@ module.exports = {
           `├── 𝑼𝑺𝑨𝑮𝑬\n` +
           `│ ${usage}\n` +
           `├── 𝑵𝑶𝑻𝑬𝑺\n` +
-          `│ 𝑇ℎ𝑒 𝑐𝑜𝑛𝑡𝑒𝑛𝑡 𝑖𝑛𝑠𝑖𝑑𝑒 ♡︎ 𝐇𝐀𝐒𝐀𝐍 ♡︎ 𝑐𝑎𝑛 𝑏𝑒 𝑐ℎ𝑎𝑛𝑔𝑒𝑑\n` +
-          `│ ♕︎ 𝐎𝐖𝐍𝐄𝐑 ♕︎:☠︎︎ 𝙃𝘼𝙎𝘼𝙉 ☠︎︎\n` +
+          `│ 𝑇ℎ𝑒 𝑐𝑜𝑛𝑡𝑒𝑛𝑡 𝑖𝑛𝑠𝑖𝑑𝑒 ⏤͟͟͟͟͞͞͞͞𝙍𝙞𝙢𝙤𝙣  𝑐𝑎𝑛 𝑏𝑒 𝑐ℎ𝑎𝑛𝑔𝑒𝑑\n` +
+          `│ ツ𝙊𝙒𝙉𝙀𝙍 👑:⏤͟͟͞͞𝙍𝙞𝙢𝙤𝙣\n` +
           `╰━━━━━━━❖`;
 
         await message.reply(response);
