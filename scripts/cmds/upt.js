@@ -1,105 +1,56 @@
-const os = require("os");
-const fs = require("fs-extra");
-
-const startTime = new Date(); // Moved outside onStart
-
-module.exports = {
+ module.exports = {
   config: {
     name: "uptime",
-    aliases: ["up", "upt"],
-    author: "ArYAN",
-    countDown: 0,
+    aliases: ["upt", "up"],
+    version: "1.0",
+    author: "BaYjid", // Author is fixed as "BaYjid"
     role: 0,
-    category: "system",
-    longDescription: {
-      en: "Get System Information",
+    shortDescription: {
+      en: "Displays the total number of users of the bot and check uptime."
     },
-  },
-  
-  onStart: async function ({ api, event, args, threadsData, usersData }) {
-    try {
-      const uptimeInSeconds = (new Date() - startTime) / 1000;
-
-      const seconds = uptimeInSeconds;
-      const days = Math.floor(seconds / (3600 * 24));
-      const hours = Math.floor((seconds % (3600 * 24)) / 3600);
-      const minutes = Math.floor((seconds % 3600) / 60);
-      const secondsLeft = Math.floor(seconds % 60);
-      const uptimeFormatted = `${days}d ${hours}h ${minutes}m ${secondsLeft}s`;
-
-      const loadAverage = os.loadavg();
-      const cpuUsage =
-        os
-          .cpus()
-          .map((cpu) => cpu.times.user)
-          .reduce((acc, curr) => acc + curr) / os.cpus().length;
-
-      const totalMemoryGB = os.totalmem() / 1024 ** 3;
-      const freeMemoryGB = os.freemem() / 1024 ** 3;
-      const usedMemoryGB = totalMemoryGB - freeMemoryGB;
-
-      const allUsers = await usersData.getAll();
-      const allThreads = await threadsData.getAll();
-      const currentDate = new Date();
-      const options = { year: "numeric", month: "numeric", day: "numeric" };
-      const date = currentDate.toLocaleDateString("en-US", options);
-      const time = currentDate.toLocaleTimeString("en-US", {
-        timeZone: "Asia/Kolkata",
-        hour12: true,
-      });
-
-      const timeStart = Date.now();
-      await api.sendMessage({
-        body: "🔎| checking........",
-      }, event.threadID);
-
-      const ping = Date.now() - timeStart;
-
-      let pingStatus = "⛔| 𝖡𝖺𝖽 𝖲𝗒𝗌𝗍𝖾𝗆";
-      if (ping < 1000) {
-        pingStatus = "✅| 𝖲𝗆𝗈𝗈𝗍𝗁 𝖲𝗒𝗌𝗍𝖾𝗆";
-      }
-      const systemInfo = `♡   ∩_∩
- （„• ֊ •„)♡
-╭─∪∪────────────⟡
-│ 𝗨𝗣𝗧𝗜𝗠𝗘 𝗜𝗡𝗙𝗢
-├───────────────⟡
-│ ⏰ 𝗥𝗨𝗡𝗧𝗜𝗠𝗘
-│  ${uptimeFormatted}
-├───────────────⟡
-│ ✅ 𝗢𝗧𝗛𝗘𝗥 𝗜𝗡𝗙𝗢
-│𝐷𝑎𝑡𝑒: ${date}
-│𝑇𝑖𝑚𝑒: ${time}
-│𝑈𝑠𝑒𝑟𝑠: ${allUsers.length}
-│𝑇ℎ𝑟𝑒𝑎𝑑𝑠: ${allThreads.length}
-│𝑃𝑖𝑛𝑔: ${ping}𝚖𝚜
-│𝑠𝑡𝑎𝑡𝑢𝑠: ${pingStatus}
-╰───────────────⟡
-`;
-
-      api.sendMessage(
-        {
-          body: systemInfo,
-        },
-        event.threadID,
-        (err, messageInfo) => {
-          if (err) {
-            console.error("Error sending message with attachment:", err);
-          } else {
-            console.log(
-              "Message with attachment sent successfully:",
-              messageInfo,
-            );
-          }
-        },
-      );
-    } catch (error) {
-      console.error("Error retrieving system information:", error);
-      api.sendMessage(
-        "Unable to retrieve system information.",
-        event.threadID,
-        event.messageID,
-      );
+    longDescription: {
+      en: "Displays the total number of users who have interacted with the bot and check uptime."
+    },
+    category: "RUNNING-TIME",
+    guide: {
+      en: "Type {pn}"
     }
   },
+  onStart: async function ({ api, event, usersData, threadsData }) {
+    try {
+      const allUsers = await usersData.getAll();
+      const allThreads = await threadsData.getAll();
+      const uptime = process.uptime();
+      const memoryUsage = (process.memoryUsage().rss / 1024 / 1024).toFixed(2);  // Memory usage in MB
+      const cpuLoad = (process.cpuUsage().user / 1000).toFixed(2); // CPU load in milliseconds
+
+      const hours = Math.floor(uptime / 3600);
+      const minutes = Math.floor((uptime % 3600) / 60);
+      const seconds = Math.floor(uptime % 60);
+      
+      const uptimeString = `
+────────────────────
+⏰  𝗛𝗢𝗨𝗥𝗦 : ${hours} 𝗛𝗥
+⌚ 𝗠𝗜𝗡𝗨𝗧𝗘𝗦 : ${minutes} 𝗠𝗜𝗡
+⏳  𝗦𝗘𝗖𝗢𝗡𝗗𝗦 : ${seconds} 𝗦𝗘𝗖
+🧠 𝗠𝗘𝗠𝗢𝗥𝗬 𝗨𝗦𝗔𝗚𝗘 : ${memoryUsage} MB
+💻 𝗖𝗣𝗨 𝗟𝗢𝗔𝗗 : ${cpuLoad} ms
+────────────────────`;
+
+      api.sendMessage(`
+★─────────────────────────★
+➤ 𝐔𝐏𝐓𝐈𝐌𝐄 ✅
+╭‣ 𝐀𝐝𝐦𝐢𝐧 👑
+╰‣ ⏤͟͟͞͞𝙔𝙤𝙪𝙧  𝙍𝙞𝙢𝙤𝙣  ❍くめ
+★─────────────────────────★
+${uptimeString}
+👥 𝐓𝐨𝐭𝐚𝐥 𝗨𝘀𝗲𝗿𝘀 : ${allUsers.length}
+🗂️ 𝐓𝐨𝐭𝐚𝐥 𝗧𝗵𝗿𝗲𝗮𝗱𝘀 : ${allThreads.length}
+★─────────────────────────★
+`, event.threadID);
+    } catch (error) {
+      console.error(error);
+      api.sendMessage("❌ **Error**: Something went wrong while fetching the data.", event.threadID);
+    }
+  }
 };
