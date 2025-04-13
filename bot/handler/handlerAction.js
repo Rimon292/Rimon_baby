@@ -53,7 +53,7 @@ module.exports = (api, threadModel, userModel, dashBoardModel, globalModel, user
     }
 }
 
-if (event.reaction == "😗") {
+if (event.reaction == "😾") {
     if (event.senderID == api.getCurrentUserID()) {
         if (
             event.userID === "61550123016189"
