@@ -148,7 +148,7 @@ module.exports.onChat = async ({ api, event,message }) => {
       if (arr === "Rimon"){ 
 const funnyReplies = [
           "কি হয়ছে বেবি দাকস কেন 🙂",
-    "আমারে কেনো লাগবে তুর বল 🦆",
+    "MB nai bye 😓",
     "Ami ekhane bby 🥹",
     "Amake vhule jaw 🤌😫",
     "Hea janu bolo shuntachi🤤🍼",
@@ -156,7 +156,7 @@ const funnyReplies = [
     "tumi ki jano Rimon ar son hasan ☠️",
     "tmi ki jano tumi onk cute 🥺",
     "I love you ummmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaahhhhhhhhh🫦💋",
-    "Kire bolod, amare koitechos naki? 🐸",
+    "https://www.facebook.com/it.z.rimon.216225 eiii naw amar owner ar id onk loyal hot caring ekta pola potiye naw 👀🫶",
     "ei new jush khaw, bot bolte bolte hapai gecho 🧃",
     "Amake vhule jao 🥺",
     "Distrub koris na amr boss Rimon ar shate room date a achi 🌚💋",
@@ -168,7 +168,7 @@ const funnyReplies = [
     "তুই মেয়ে হলে আমার owner রিমনকে ডাক অনেক ভালো ছেলে 🔥🌚💋",
     "কি হইছে আমার কি কাজে লাগবে তুর !?🌚👀",
     "তুই সেই লুইচ্চাটা না !? 🙂🔪",
-    "Tmr nam ki janu 💋🌚",
+    "baby baby na kore porte bosleo toh paros 🙂",
     "i love you janu🐣"
         ];
         return api.sendMessage(funnyReplies[Math.floor(Math.random() * funnyReplies.length)], event.threadID, (error, info) => {
