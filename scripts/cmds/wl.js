@@ -1,10 +1,10 @@
-const { config } = global.GoatBot;
+ const { config } = global.GoatBot;
 module.exports = {
 	config: {
 		name: "whitelist",
 		aliases:["wl"],
 		version: "1.0",
-		author: "rehat--",
+		author: "𝘙𝘪𝘮𝘰𝘯",
 		countDown: 5,
 		role: 2,
 		longDescription: {
@@ -29,7 +29,7 @@ module.exports = {
 			missingIdRemove: "⚠ | Please enter ID or tag user to remove whiteListIds",
 			listAdmin: "👑 | List of whiteListIds:\n%1",
       enable: "Turned on the mode only specific whiteListIds can use bot",
-      disable: "Turned off the mode only specific whiteListIds can use bot"
+      disable: "✅❏𝙏𝙪𝙧𝙣𝙚𝙙 𝙤𝙛𝙛 𝙩𝙝𝙚 𝙢𝙤𝙙𝙚 𝙤𝙣𝙡𝙮 𝙨𝙥𝙚𝙘𝙞𝙛𝙞𝙘 𝙬𝙝𝙞𝙩𝙚𝙇𝙞𝙨𝙩𝙄𝙙𝙨 𝙘𝙖𝙣 𝙪𝙨𝙚 𝙗𝙤𝙩"
 		}
 	},
 
@@ -37,7 +37,7 @@ module.exports = {
     const permission = global.GoatBot.config.owner;
     if (!permission.includes(event.senderID)) {
       api.sendMessage(
-        "Ke tumi botsho 😷❄️?",
+       "❌❒𝙮𝙤𝙪 𝙙𝙤 𝙣𝙤𝙩 𝙝𝙖𝙫𝙚 𝙥𝙚𝙧𝙢𝙞𝙨𝙨𝙞𝙤𝙣 𝙩𝙤 𝙪𝙨𝙚 𝙩𝙝𝙞𝙨 𝙘𝙤𝙢𝙢𝙖𝙣𝙙 ",
         event.threadID,
         event.messageID
       );
