@@ -168,7 +168,7 @@ const funnyReplies = [
     "তুই মেয়ে হলে আমার owner রিমনকে ডাক অনেক ভালো ছেলে 🔥🌚💋",
     "কি হইছে আমার কি কাজে লাগবে তুর !?🌚👀",
     "তুই সেই লুইচ্চাটা না !? 🙂🔪",
-    "baby baby na kore porte bosleo toh paros 🙂",
+    " prem korba 🙂",
     "i love you janu🐣"
         ];
         return api.sendMessage(funnyReplies[Math.floor(Math.random() * funnyReplies.length)], event.threadID, (error, info) => {
