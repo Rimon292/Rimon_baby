@@ -1,55 +1,92 @@
 const axios = require("axios");
+const fs = require("fs-extra");
 const path = require("path");
-const fs = require("fs");
+const baseApiUrl = async () => {
+    const base = await axios.get(
+        `https://raw.githubusercontent.com/Mostakim0978/D1PT0/refs/heads/main/baseApiUrl.json`,
+    );
+    return base.data.api;
+};
 
 module.exports = {
     config: {
         name: "pin",
-        version: "1.7",
-        author: "MahMUD",
+        aliases: ["pinterest"],
+        version: "1.0",
+        author: "Dipto",
+        countDown: 15,
         role: 0,
-        category: "media",
+        shortDescription: "Pinterest Image Search",
+        longDescription: "Pinterest Image Search",
+        category: "download",
         guide: {
-            en: "{pn} <search query> <number of images>\nExample: {pn} goku Ultra - 10"
-        }
+            en: "{pn} query",
+        },
     },
 
     onStart: async function ({ api, event, args }) {
-        const [keySearch, count] = args.join(" ").split(" - ");
+        const queryAndLength = args.join(" ").split("-");
+        const q = queryAndLength[0].trim();
+        const length = queryAndLength[1].trim();
 
-        if (!keySearch) {
-            return api.sendMessage("Please enter a search query.\nExample: {pn} goku Ultra - 10.", event.threadID, event.messageID);
+        if (!q || !length) {
+            return api.sendMessage(
+                "❌| Wrong Format",
+                event.threadID,
+                event.messageID,
+            );
         }
-
-        const numberSearch = count ? Math.min(parseInt(count), 20) : 6;
-        const apiUrl = `https://mahmud-pin-api.onrender.com/pin?search=${encodeURIComponent(keySearch)}&count=${numberSearch}`;
 
         try {
-            const { data } = await axios.get(apiUrl);
-            if (!data.data?.length) {
-                return api.sendMessage("No images found.", event.threadID, event.messageID);
+            const w = await api.sendMessage("Please wait...", event.threadID);
+            const response = await axios.get(
+                `${await baseApiUrl()}/pinterest?search=${encodeURIComponent(q)}&limit=${encodeURIComponent(length)}`,
+            );
+            const data = response.data.data;
+
+            if (!data || data.length === 0) {
+                return api.sendMessage(
+                    "Empty response or no images found.",
+                    event.threadID,
+                    event.messageID,
+                );
             }
 
-            const cacheDir = path.join(__dirname, "cache");
-            if (!fs.existsSync(cacheDir)) fs.mkdirSync(cacheDir);
+            const diptoo = [];
+            const totalImagesCount = Math.min(data.length, parseInt(length));
 
-            const imgData = await Promise.all(data.data.slice(0, numberSearch).map(async (url, i) => {
-                try {
-                    const imgResponse = await axios.get(url, { responseType: "arraybuffer" });
-                    const imgPath = path.join(cacheDir, `${i + 1}.jpg`);
-                    await fs.promises.writeFile(imgPath, imgResponse.data, "binary");
-                    return fs.createReadStream(imgPath);
-                } catch {
-                    return null;
-                }
-            }));
+            for (let i = 0; i < totalImagesCount; i++) {
+                const imgUrl = data[i];
+                const imgResponse = await axios.get(imgUrl, {
+                    responseType: "arraybuffer",
+                });
+                const imgPath = path.join(
+                    __dirname,
+                    "dvassests",
+                    `${i + 1}.jpg`,
+                );
+                await fs.outputFile(imgPath, imgResponse.data);
+                diptoo.push(fs.createReadStream(imgPath));
+            }
 
-            await api.sendMessage({ attachment: imgData.filter(Boolean) }, event.threadID, event.messageID);
-            await fs.promises.rm(cacheDir, { recursive: true });
-
+            await api.unsendMessage(w.messageID);
+            await api.sendMessage(
+                {
+                    body: `
+✅ | Here's Your Query Based images
+🐤 | Total Images Count: ${totalImagesCount}`,
+                    attachment: diptoo,
+                },
+                event.threadID,
+                event.messageID,
+            );
         } catch (error) {
             console.error(error);
-            api.sendMessage(`error baby: ${error.message}`, event.threadID, event.messageID);
+            await api.sendMessage(
+                `Error: ${error.message}`,
+                event.threadID,
+                event.messageID,
+            );
         }
-    }
+    },
 };
