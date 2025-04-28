@@ -4,13 +4,13 @@ module.exports.config = {
     role: 1,
     author: "flame x",
     description: "5 বারের জন্য ক্রমাগত বন্ধুর ট্যাগ ট্যাগ করুন\nসেই ব্যক্তিকে আত্মা কলিং বলা যেতে পারে",
-    category: "nsfw",
-    guide: " please @mention",
+    category: "admin",
+    guide: " type (prefix) and mention 👽",
     coolDown: 10
 }
 module.exports.onStart = async function({ api, args, Users, event}) {
     var mention = Object.keys(event.mentions)[0];
-    if(!mention) return api.sendMessage("ভাতিজা খানকিরপুলারে একটা মেনশন দে-!!🫂", event.threadID);
+    if(!mention) return api.sendMessage("boss illiterate khankir pola ta ke mention korun 😇", event.threadID);
  let name =  event.mentions[mention];
     var arraytag = [];
         arraytag.push({id: mention, tag: name});
