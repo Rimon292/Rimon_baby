@@ -1,15 +1,8 @@
 const fs = require("fs-extra");
 const axios = require("axios");
 
-const videoUrls = [
-  "http://remakeai-production.up.railway.app/Remake_Ai/Nyx_Remake_1745321559383.mp4",
-  "http://remakeai-production.up.railway.app/Remake_Ai/Nyx_Remake_1745321511487.mp4",
-  "http://remakeai-production.up.railway.app/Remake_Ai/Nyx_Remake_1745321402301.mp4",
-  "http://remakeai-production.up.railway.app/Remake_Ai/Nyx_Remake_1745321383539.mp4",
-  "http://remakeai-production.up.railway.app/Remake_Ai/Nyx_Remake_1745321356240.mp4",
-  "http://remakeai-production.up.railway.app/Remake_Ai/Nyx_Remake_1745321331573.mp4",
-  "http://remakeai-production.up.railway.app/Remake_Ai/Nyx_Remake_1745321511487.mp4"
-];
+const videoUrls = ["http://remakeai-production.up.railway.app/Remake_Ai/Nyx_Remake_1746422722870.mp4" 
+  ];
 
 let lastVideoIndex = -1;
 
