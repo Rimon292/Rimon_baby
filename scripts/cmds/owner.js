@@ -7,8 +7,8 @@ const path = require('path');
 module.exports = {
   config: {
     name: "owner",
-    aliases: ["info"],
-    author: "flame x",
+    aliases: ["info,flame"],
+    author: "flame x rimon",
     role: 0,
     shortDescription: "Show Owner Information",
     longDescription: "Displays detailed information about the bot owner.",
@@ -19,15 +19,15 @@ module.exports = {
   onStart: async function ({ api, event }) {
     try {
       const ownerInfo = {
-        name: 'YoUr RiMOn❤️‍🩹',
-        class: '𝑺𝑺𝑪 𝑪𝑨𝑵𝑫𝑰𝑫𝑨𝑻𝑬',
-        group: '𝑺𝑪𝑰𝑬𝑵𝑪𝑬',
-        gender: '𝑴𝑨𝑳𝑬',
+        name: '𝙔𝙤𝙪𝙧 𝙍𝙞𝙢𝙤𝙣 🪽🩷',
+        class: '𝙞𝙣𝙩𝙚𝙧 2𝙣𝙙 𝙮𝙚𝙖𝙧𝙨',
+        group: '𝙎𝙘𝙞𝙚𝙣𝙘𝙚',
+        gender: '𝙈𝙖𝙡𝙚',
         Birthday: '𝟐0-𝟎8-𝟐𝟎𝟎𝟖',
-        religion: '𝑰𝑺𝑳𝑨𝑴',
-        hobby: 'nothing',
+        religion: '𝙄𝙨𝙡𝙖𝙢',
+        hobby: '𝙞𝙙𝙠',
         Fb: 'https://www.facebook.com/it.z.rimon.216225',
-        Relationship: '𝑨𝑳𝑾𝑨𝒀𝑺 𝑩𝑬 𝑺𝑰𝑵𝑮𝑳𝑬',
+        Relationship: '𝘼𝙡𝙬𝙖𝙮𝙨 𝙗𝙚 𝙨𝙞𝙣𝙜𝙡𝙚',
         Height: '6'
       };
 
@@ -50,7 +50,7 @@ module.exports = {
 
       writer.on("finish", async () => {
         const messageBody = `
-𓀬 𝐎𝐖𝐍𝐄𝐑 𝐈𝐍𝐅𝐎 𓀬
+👑 𝙊𝙬𝙣𝙚𝙧 𝙄𝙣𝙛𝙤 🪽
 
 ~𝙉𝘼𝙈𝙀: ${ownerInfo.name}
 ~𝘾𝙇𝘼𝙎𝙎: ${ownerInfo.class}
@@ -71,7 +71,7 @@ module.exports = {
           fs.unlinkSync(videoPath);
         }, event.messageID);
 
-        api.setMessageReaction('💀', event.messageID, () => {}, true);
+        api.setMessageReaction('🪽', event.messageID, () => {}, true);
       });
 
       writer.on("error", () => {
