@@ -1,70 +1,59 @@
-const fs = require("fs");
-const path = require("path");
-const axios = require("axios");
+*gitadd edit.js const axios = require("axios");
 
 module.exports = {
   config: {
     name: "edit",
-    aliases: ['imgedit'],
-    author: "Mahi--",
+    aliases: [],
     version: "1.0",
-    cooldowns: 20,
+    author: "flame x",
+    countDown: 2,
     role: 0,
-    shortDescription: "Edit image with text prompt",
-    longDescription: "Edits an image using the provided text prompt and image link or replied image",
+    shortDescription: {
+      en: "Edit image with prompt (reply only)"
+    },
+    longDescription: {
+      en: "Reply to an image and provide a prompt to edit it using AI."
+    },
     category: "image",
-    guide: "{p}edit <prompt> (reply to image) or {p}edit <image_url> <prompt>",
+    guide: {
+      en: "{p}edit <prompt> → Reply to an image and give instruction to edit it."
+    }
   },
-  onStart: async function ({ message, args, api, event }) {
-    // Obfuscated author name check
-    const obfuscatedAuthor = String.fromCharCode(77, 97, 104, 105, 45, 45);
-    if (this.config.author !== obfuscatedAuthor) {
-      return api.sendMessage("You are not authorized to change the author name.", event.threadID, event.messageID);
-    }
 
-    // Get image URL and prompt
-    let imageUrl, prompt;
-    
-    if (event.messageReply && event.messageReply.attachments.length > 0) {
-      // Case: Reply to an image with prompt in arguments
-      imageUrl = event.messageReply.attachments[0].url;
-      prompt = args.join(" ");
-    } else if (args.length >= 2) {
-      // Case: Image URL and prompt provided as arguments
-      imageUrl = args[0];
-      prompt = args.slice(1).join(" ");
-    } else {
-      return api.sendMessage("❌ | Invalid format. Use:\n• Reply to an image with '{p}edit <prompt>'\n• Or '{p}edit <image_url> <prompt>'", event.threadID);
-    }
+  onStart: async function ({ message, event, args, api }) {
+    const prompt = args.join(" ");
+    if (!prompt) return message.reply("❗Please provide a prompt for image editing.");
+    if (!event.messageReply || !event.messageReply.attachments || event.messageReply.attachments.length === 0)
+      return message.reply("❗Please reply to an image.");
 
-    if (!prompt) {
-      return api.sendMessage("❌ | Please provide a text prompt for the image editing.", event.threadID);
-    }
+    const attachment = event.messageReply.attachments[0];
+    if (attachment.type !== "photo") return message.reply("❗Please reply to a photo only.");
 
-    api.sendMessage("🗯️ | Editing your image, please wait...", event.threadID, event.messageID);
+    // React with ⌚
+    api.setMessageReaction("⌚", event.messageID, () => {}, true);
 
     try {
-      const editApiUrl = `http://193.149.164.141:9995/i/api/edit?url=${encodeURIComponent(imageUrl)}&txt=${encodeURIComponent(prompt)}`;
+      const imgUrl = attachment.url;
+      const apiUrl = `https://api-new-dxgd.onrender.com/edit?prompt=${encodeURIComponent(prompt)}&url=${encodeURIComponent(imgUrl)}`;
 
-      const response = await axios.get(editApiUrl, {
-        responseType: "arraybuffer"
-      });
+      const res = await axios.get(apiUrl);
+      const imageUrl = res.data.imageUrl;
 
-      const cacheFolderPath = path.join(__dirname, "cache");
-      if (!fs.existsSync(cacheFolderPath)) {
-        fs.mkdirSync(cacheFolderPath);
-      }
-      const imagePath = path.join(cacheFolderPath, `${Date.now()}_edited_image.jpg`);
-      fs.writeFileSync(imagePath, Buffer.from(response.data, "binary"));
+      if (!imageUrl) return message.reply("No image returned from API.");
 
-      const stream = fs.createReadStream(imagePath);
+      // Send image
       message.reply({
-        body: `✅ | Image edited with prompt: "${prompt}"`,
-        attachment: stream
+        body: "",
+        attachment: await global.utils.getStreamFromURL(imageUrl)
       });
-    } catch (error) {
-      console.error("Error:", error);
-      message.reply("❌ | An error occurred while editing the image. Please try again later.");
+
+      // React with ✅
+      api.setMessageReaction("✅", event.messageID, () => {}, true);
+
+    } catch (err) {
+      console.error(err);
+      message.reply("❌Image edit failed.");
+      api.setMessageReaction("❌", event.messageID, () => {}, true);
     }
   }
 };
