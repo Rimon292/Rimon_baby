@@ -1,84 +1,95 @@
+const cooldown = new Map();
+
 module.exports = {
   config: {
     name: "slot",
-    version: "3.0",
-    author: "⚡ 𝙍𝙞𝙢𝙤𝙣 ⚡",
-    shortDescription: { en: "Slot game" },
-    longDescription: { en: "Advanced Slot game with jackpot feature." },
-    category: "game",
+    version: "2.5",
+    author: "flame x",
+    description: {
+      role: 2,
+      en: "Playing slot game",
+    },
+    category: "Game",
   },
   langs: {
     en: {
-      invalid_amount: "Enter a valid and positive amount to have a chance to win more!",
-      not_enough_money: "Fokinni! Tui toh gorib, balance chack kor?! 😤",
-      spin_message: "Spinning...",
-      win_message: "✨!!𝗦𝗟𝗢𝗧 𝗥𝗘𝗦𝗨𝗟𝗧!!🔥"
-        + "\n        "
-        + "\n⚡ 𝑌𝑂𝑈 𝑊𝑂𝑁 𝑇𝐻𝐸 𝑆𝐿𝑂𝑇 🤝"
-        + "\n~💸𝑊𝑂𝑁 𝑀𝑂𝑁𝐸𝑌💸: $%1"
-        + "\n~𝐸𝑛𝑗𝑜𝑦☑️!",
-      lose_message: "💰!!𝗦𝗟𝗢𝗧 𝗥𝗘𝗦𝗨𝗟𝗧!!💔"
-        + "\n        "
-        + "\n😿 𝑌𝑂𝑈 𝐿𝑂𝑆𝑇 𝑇𝐻𝐸 𝑆𝐿𝑂𝑇 😿"
-        + "\n~💸𝐿𝑂𝑆𝑇 𝑀𝑂𝑁𝐸𝑌😿: $%1"
-        + "\n~𝐴𝑙𝑎𝑠💰!",
-      jackpot_message: "💰 !!!𝗝𝗔𝗖𝗞𝗣𝗢𝗧!!! 🎰"
-        + "\n        "
-        + "\n💯 𝑌𝑂𝑈 𝑊𝑂𝑁 𝐽𝐴𝐶𝐾𝑃𝑂𝑇 💥"
-        + "\n~💸𝑊𝑂𝑁 𝑀𝑂𝑁𝐸𝑌💸: $%1"
-        + "\n~𝑊𝑖𝑡ℎ 𝑓𝑜𝑢𝑟 %2 𝑠𝑦𝑚𝑏𝑙𝑒𝑠, 𝐸𝑛𝑗𝑜𝑦💰!",
+      invalid_amount: "💰 Please enter a valid amount of money to play.",
+      not_enough_money: "💸 Check your balance if you have that amount.",
+      cooldown_message: "⏳ Please wait 5 seconds before playing again.",
+      win_message: "𝐁𝐚𝐛𝐲, 𝐘𝐨𝐮 𝐰𝐨𝐧 $%1",
+      lose_message: "𝐁𝐚𝐛𝐲, 𝐘𝐨𝐮 𝐥𝐨𝐬𝐭 $%1",
+      jackpot_message: "𝐉𝐀𝐂𝐊𝐏𝐎𝐓!! 𝐘𝐨𝐮 𝐰𝐨𝐧 $%1 𝐟𝐨𝐫 𝐟𝐢𝐯𝐞 %2 𝐬𝐲𝐦𝐛𝐨𝐥𝐬!",
     },
   },
-
   onStart: async function ({ args, message, event, usersData, getLang }) {
     const { senderID } = event;
+
+    if (cooldown.has(senderID)) {
+      return message.reply(getLang("cooldown_message"));
+    }
+    cooldown.set(senderID, true);
+    setTimeout(() => cooldown.delete(senderID), 5000);
+
     const userData = await usersData.get(senderID);
     const amount = parseInt(args[0]);
 
     if (isNaN(amount) || amount <= 0) {
       return message.reply(getLang("invalid_amount"));
     }
+
     if (amount > userData.money) {
       return message.reply(getLang("not_enough_money"));
     }
 
-    const slots = ["❤️‍🩹", "🩷", "♥", "💖", "💝", "💞", "💗", "💘", "❣️", "❤️‍🔥", "💕", "♥"];
+    const slots = ["💚", "🧡", "❤️", "💜", "💙", "💛"];
     const slot1 = slots[Math.floor(Math.random() * slots.length)];
     const slot2 = slots[Math.floor(Math.random() * slots.length)];
     const slot3 = slots[Math.floor(Math.random() * slots.length)];
-    const slot4 = slots[Math.floor(Math.random() * slots.length)];
 
-    const winnings = calculateWinnings(slot1, slot2, slot3, slot4, amount);
-    await usersData.set(senderID, { money: userData.money + winnings });
+    const winnings = win(slot1, slot2, slot3, amount);
 
-    const messageText = getSpinResultMessage(slot1, slot2, slot3, slot4, winnings, getLang);
+    await usersData.set(senderID, {
+      money: userData.money + winnings,
+      data: userData.data,
+    });
+
+    const messageText = result(slot1, slot2, slot3, winnings, getLang);
     return message.reply(messageText);
   },
 };
 
-function calculateWinnings(slot1, slot2, slot3, slot4, betAmount) {
-  if (slot1 === slot2 && slot2 === slot3 && slot3 === slot4) {
-    if (slot1 === "🍆" || slot1 === "🍍") return betAmount * 20; // বড় Jackpot!
-    return betAmount * 10; // চারটি একই চিহ্ন হলে ১০x
-  } 
-  else if ((slot1 === slot2 && slot2 === slot3) || (slot2 === slot3 && slot3 === slot4)) {
-    return betAmount * 5; // তিনটি মিললে ৫x
-  } 
-  else if (slot1 === slot2 || slot1 === slot3 || slot1 === slot4 || slot2 === slot3 || slot2 === slot4 || slot3 === slot4) {
-    return betAmount * 3; // দুটি মিললে 3x pabe
-  } 
-  else {
-    return -betAmount * 1; // কিছু না মিললে বাজির 1 গুণ হারাবে
+function win(slot1, slot2, slot3, betAmount) {
+  const isJackpot = slot1 === slot2 && slot2 === slot3;
+  const isWin = isJackpot || Math.random() < 0.4;
+
+  if (isJackpot) return betAmount * 10;
+  if (isWin) return betAmount * 2;
+  return -betAmount;
+}
+
+function result(slot1, slot2, slot3, winnings, getLang) {
+  const bold = (text) =>
+    text
+      .replace(/[A-Z]/gi, (c) =>
+        String.fromCodePoint(
+          c.charCodeAt(0) + (c >= 'a' ? 119737 - 97 : 119743 - 65)
+        )
+      )
+      .replace(/\d/g, (d) =>
+        String.fromCodePoint(0x1d7ce + parseInt(d))
+      );
+
+  const slotLine = `\n\n• 𝐆𝐚𝐦𝐞 𝐑𝐞𝐬𝐮𝐥𝐭𝐬 [  ${slot1}  |  ${slot2}  |  ${slot3}  ]`;
+
+  if (winnings > 0) {
+    if (slot1 === slot2 && slot2 === slot3) {
+      return `${bold(">🪽")}\n• ${bold(getLang("jackpot_message", winnings, slot1))}${bold(slotLine)}`;
+    } else {
+      return `${bold(">🪽")}\n• ${bold(getLang("win_message", winnings))}${bold(slotLine)}`;
+    }
+  } else {
+    return `${bold(">🪽")}\n• ${bold(getLang("lose_message", -winnings))}${bold(slotLine)}`;
   }
 }
 
-function getSpinResultMessage(slot1, slot2, slot3, slot4, winnings, getLang) {
-  if (winnings > 0) {
-    if (slot1 === slot2 && slot2 === slot3 && slot3 === slot4) {
-      return getLang("jackpot_message", winnings, slot1);
-    }
-    return getLang("win_message", winnings) + `\n~𝐒𝐋𝐎𝐓'𝐒:\n[ ${slot1} | ${slot2} | ${slot3} | ${slot4} ]`;
-  } else {
-    return getLang("lose_message", -winnings) + `\n~𝐒𝐋𝐎𝐓'𝐒:\n[ ${slot1} | ${slot2} | ${slot3} | ${slot4} ]`;
-  }
-           }
+                                   
