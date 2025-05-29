@@ -3,18 +3,18 @@ module.exports = {
         name: "balance",
         aliases: ["bal"],
         version: "1.5",
-        author: "♡︎ 𝐻𝐴𝑆𝐴𝑁 ♡︎",
+        author: "Flame x Rimon",
         countDown: 5,
         role: 0,
         description: {
-            en: "📊 | View your money or the money of the tagged person.And send or request for money"
+            en: "😽 𝐂𝐡𝐞𝐜𝐤 𝐛𝐚𝐥𝐚𝐧𝐜𝐞, 𝐬𝐞𝐧𝐝 𝐨𝐫 𝐫𝐞𝐪𝐮𝐞𝐬𝐭 𝐦𝐨𝐧𝐞𝐲 𝐰𝐢𝐭𝐡 𝐜𝐚𝐭 𝐜𝐮𝐭𝐞𝐧𝐞𝐬𝐬~"
         },
         category: "economy",
         guide: {
-            en: "   {pn}: view your money 💰"
-                + "\n   {pn} <@tag>: view the money of the tagged person 💵"
-                + "\n   {pn} send [amount] @mention: send money to someone 💸"
-                + "\n   {pn} request [amount] @mention: request money from someone 💵"
+            en: "   {pn} ➤ 𝐂𝐡𝐞𝐜𝐤 𝐲𝐨𝐮𝐫 𝐛𝐚𝐥𝐚𝐧𝐜𝐞 😽"
+                + "\n   {pn} <@tag> ➤ 𝐂𝐡𝐞𝐜𝐤 𝐭𝐡𝐞𝐢𝐫 𝐛𝐚𝐥𝐚𝐧𝐜𝐞 🐾"
+                + "\n   {pn} send [amount] @mention ➤ 𝐒𝐞𝐧𝐝 𝐦𝐨𝐧𝐞𝐲 😼"
+                + "\n   {pn} request [amount] @mention ➤ 𝐀𝐬𝐤 𝐟𝐨𝐫 𝐦𝐨𝐧𝐞𝐲 🐱"
         }
     },
 
@@ -57,10 +57,10 @@ module.exports = {
         const formattedMoney = this.formatMoney(money);
 
         if (isSelfCheck) {
-            return message.reply(`💰 𝑌𝑜𝑢𝑟 𝐵𝑎𝑙𝑎𝑛𝑐𝑒 𝑖𝑠 ${formattedMoney} $ 🤑`);
+            return message.reply(`🐾 𝐌𝐞𝐨𝐰~ 𝐘𝐨𝐮𝐫 𝐁𝐚𝐥𝐚𝐧𝐜𝐞 𝐢𝐬 💵 ${formattedMoney} 😽`);
         } 
         else {
-            return message.reply(`💳 𝑩𝑨𝑳𝑨𝑵𝑪𝑬 𝑰𝑵𝑭𝑶 💳\n💰 ${userData?.name || "𝑈𝑠𝑒𝑟"} - 𝐻𝑎𝑠 ${formattedMoney} $ 💸\n💫 𝐻𝑎𝑣𝑒 𝑎 𝑔𝑜𝑜𝑑 𝑑𝑎𝑦 💫`);
+            return message.reply(`🐱 𝐂𝐚𝐭 𝐁𝐚𝐧𝐤 𝐑𝐞𝐩𝐨𝐫𝐭 🐱\n😼 ${userData?.name || "𝐔𝐬𝐞𝐫"} 𝐡𝐚𝐬 ${formattedMoney} 💰\n😻 𝐊𝐞𝐞𝐩 𝐛𝐞𝐢𝐧𝐠 𝐚 𝐫𝐢𝐜𝐡 𝐜𝐚𝐭!`);
         }
     },
 
@@ -71,7 +71,7 @@ module.exports = {
         let targetID;
 
         if (isNaN(amount) || amount <= 0) {
-            return api.sendMessage(`❌ | Invalid amount! Usage:\n{pn} send [amount] @mention\n{pn} request [amount] @mention`, threadID);
+            return api.sendMessage(`😿 𝐈𝐧𝐯𝐚𝐥𝐢𝐝 𝐚𝐦𝐨𝐮𝐧𝐭, 𝐤𝐢𝐭𝐭𝐲! ➤\n{pn} send [amount] @mention\n{pn} request [amount] @mention`, threadID);
         }
 
         if (messageReply) {
@@ -79,13 +79,13 @@ module.exports = {
         } else {
             const mentionKeys = Object.keys(mentions);
             if (mentionKeys.length === 0) {
-                return api.sendMessage("❌ | Mention someone to send/request money!", threadID);
+                return api.sendMessage("😾 𝐘𝐨𝐮 𝐧𝐞𝐞𝐝 𝐭𝐨 𝐦𝐞𝐧𝐭𝐢𝐨𝐧 𝐚 𝐜𝐚𝐭!", threadID);
             }
             targetID = mentionKeys[0];
         }
 
         if (!targetID || targetID === senderID) {
-            return api.sendMessage("❌ | You cannot send/request money to yourself!", threadID);
+            return api.sendMessage("🙀 𝐂𝐚𝐧'𝐭 𝐬𝐞𝐧𝐝 𝐨𝐫 𝐫𝐞𝐪𝐮𝐞𝐬𝐭 𝐭𝐨 𝐲𝐨𝐮𝐫𝐬𝐞𝐥𝐟!", threadID);
         }
 
         if (command === "send") {
@@ -93,11 +93,11 @@ module.exports = {
             const receiverData = await usersData.get(targetID);
 
             if (!senderData || !receiverData) {
-                return api.sendMessage("❌ | User not found.", threadID);
+                return api.sendMessage("😿 𝐔𝐬𝐞𝐫 𝐧𝐨𝐭 𝐟𝐨𝐮𝐧𝐝!", threadID);
             }
 
             if (senderData.money < amount) {
-                return api.sendMessage("❌ | You don't have enough money!", threadID);
+                return api.sendMessage("😿 𝐍𝐨𝐭 𝐞𝐧𝐨𝐮𝐠𝐡 𝐜𝐚𝐬𝐡, 𝐦𝐲 𝐟𝐞𝐥𝐥𝐢𝐧𝐞!", threadID);
             }
 
             await usersData.set(senderID, { ...senderData, money: senderData.money - amount });
@@ -106,16 +106,16 @@ module.exports = {
             const senderName = await usersData.getName(senderID);
             const receiverName = await usersData.getName(targetID);
 
-            api.sendMessage(`✅ | ${senderName} Send you ${this.formatMoney(amount)} $ ! 💸`, targetID);
-            return api.sendMessage(`✅ | You successfully send ${this.formatMoney(amount)} $ To ${receiverName}`, threadID);
+            api.sendMessage(`😽 𝐇𝐞𝐲! ${senderName} 𝐬𝐞𝐧𝐭 𝐲𝐨𝐮 ${this.formatMoney(amount)} 💰!`, targetID);
+            return api.sendMessage(`😺 𝐘𝐨𝐮 𝐬𝐞𝐧𝐭 ${this.formatMoney(amount)} 𝐭𝐨 ${receiverName} 😽`, threadID);
         }
 
         if (command === "request") {
             const requesterName = await usersData.getName(senderID);
             const targetName = await usersData.getName(targetID);
 
-            api.sendMessage(`📩 | ${requesterName} তোমার কাছ থেকে ${this.formatMoney(amount)} টাকা চাইছে! 💵\nপাঠাতে "{pn} send ${amount} @${requesterName}" ব্যবহার করো।`, targetID);
-            return api.sendMessage(`📩 | তুমি ${targetName}-এর কাছে ${this.formatMoney(amount)} টাকা চেয়েছো!`, threadID);
+            api.sendMessage(`😿 ${requesterName} তোমার কাছে ${this.formatMoney(amount)} টাকা চেয়েছে!\nপাঠাতে লেখো: "{pn} send ${amount} @${requesterName}"`, targetID);
+            return api.sendMessage(`😼 তুমি ${targetName}-এর কাছে ${this.formatMoney(amount)} টাকা চেয়েছো!`, threadID);
         }
     }
 };
