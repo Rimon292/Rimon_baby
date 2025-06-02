@@ -1,59 +1,47 @@
- const axios = require("axios");
 
 module.exports = {
   config: {
     name: "edit",
     aliases: [],
-    version: "1.0",
-    author: "flame x",
-    countDown: 2,
     role: 0,
-    shortDescription: {
-      en: "Edit image with prompt (reply only)"
-    },
-    longDescription: {
-      en: "Reply to an image and provide a prompt to edit it using AI."
-    },
+    author: "flame x",
+    countDown: 5,
+    longDescription: "",
     category: "image",
     guide: {
-      en: "{p}edit <prompt> → Reply to an image and give instruction to edit it."
+      en: "/edit make this image black white"
     }
   },
-
-  onStart: async function ({ message, event, args, api }) {
-    const prompt = args.join(" ");
-    if (!prompt) return message.reply("❗Please provide a prompt for image editing.");
-    if (!event.messageReply || !event.messageReply.attachments || event.messageReply.attachments.length === 0)
-      return message.reply("❗Please reply to an image.");
-
-    const attachment = event.messageReply.attachments[0];
-    if (attachment.type !== "photo") return message.reply("❗Please reply to a photo only.");
-
-    // React with ⌚
-    api.setMessageReaction("⌚", event.messageID, () => {}, true);
-
-    try {
-      const imgUrl = attachment.url;
-      const apiUrl = `https://api-new-dxgd.onrender.com/edit?prompt=${encodeURIComponent(prompt)}&url=${encodeURIComponent(imgUrl)}`;
-
-      const res = await axios.get(apiUrl);
-      const imageUrl = res.data.imageUrl;
-
-      if (!imageUrl) return message.reply("No image returned from API.");
-
-      // Send image
-      message.reply({
-        body: "",
-        attachment: await global.utils.getStreamFromURL(imageUrl)
-      });
-
-      // React with ✅
-      api.setMessageReaction("✅", event.messageID, () => {}, true);
-
-    } catch (err) {
-      console.error(err);
-      message.reply("❌Image edit failed.");
-      api.setMessageReaction("❌", event.messageID, () => {}, true);
+  onStart: async function ({ message, api, args, event }) {
+    if (!event.messageReply || !event.messageReply.attachments || !event.messageReply.attachments[0]) {
+      return message.reply("📸| Please reply to an image to edit it.");
     }
+
+    if (!args[0]) {
+      return message.reply("📝| Please provide a prompt.");
+    }
+
+    const prompt = encodeURIComponent(args.join(" "));
+    const imgurl = encodeURIComponent(event.messageReply.attachments[0].url);
+    const geditUrl = `https://smfahim.xyz/gedit?prompt=${prompt}&url=${imgurl}`;
+
+    api.setMessageReaction("⏰", event.messageID, () => {}, true);
+
+    message.reply("🔄| Editing image, please wait...", async (err, info) => {
+      try {
+        const attachment = await global.utils.getStreamFromURL(geditUrl);
+        message.reply({ 
+          body: `✅| Here is your edited image!`, 
+          attachment: attachment 
+        });
+
+        let ui = info.messageID;          
+        message.unsend(ui);
+        api.setMessageReaction("✅", event.messageID, () => {}, true);
+      } catch (error) {
+        message.reply("❌| There was an error editing your image.");
+        console.error(error);
+      }
+    });
   }
 };
