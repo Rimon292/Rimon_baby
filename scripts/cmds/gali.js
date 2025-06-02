@@ -1,4 +1,4 @@
- module.exports = {
+module.exports = {
   config: {
     name: "gali",
     aliases: ["gali", "insult"],
@@ -45,7 +45,7 @@
       return api.sendMessage("Reply কর কারে গালি দিবি!", event.threadID, event.messageID);
     }
 
-    if (targetID === "100068909067279") {
+    if (targetID === "61550123016189") {
       return api.sendMessage("kids?! this is my owner and your daddy 💀", event.threadID, event.messageID);
     }
 
